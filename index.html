@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID-IoT | Identity-based Internet of Things</title>
+    <meta name="description" content="ID-IoT: The Identity-first architecture for the Internet of Things. We are not idiots.">
+    <style>
+        /* 基础重置与暗黑主题 */
+        :root {
+            --bg-color: #0a0a0a;
+            --text-main: #ededed;
+            --text-muted: #888888;
+            --accent: #00ffcc; /* 赛博朋克青 */
+            --accent-glow: rgba(0, 255, 204, 0.2);
+            --font-mono: 'Fira Code', 'Courier New', Courier, monospace;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 极客网格背景 */
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* 顶部导航 */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 5%;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: -1px;
+        }
+        
+        .logo span {
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .domain-badge {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        /* 英雄区 (Hero) */
+        .hero {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
+        }
+
+        .hero h1 .highlight {
+            color: var(--accent);
+            text-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .slogan {
+            font-family: var(--font-mono);
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            background: rgba(255,255,255,0.05);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .slogan strong {
+            color: var(--text-main);
+        }
+
+        /* 终端代码窗 */
+        .terminal {
+            background: #111;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 600px;
+            text-align: left;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background: #1a1a1a;
+            padding: 0.5rem 1rem;
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background: #ff5f56; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #27c93f; }
+
+        .terminal-body {
+            padding: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: #a9b7c6;
+            line-height: 1.5;
+        }
+
+        .prompt { color: var(--accent); }
+        .comment { color: #5c6370; }
+        .string { color: #98c379; }
+        .keyword { color: #c678dd; }
+
+        /* 技术特性部分 */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 5rem 5%;
+            background: rgba(0,0,0,0.5);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .feature-card {
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.02);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px var(--accent-glow);
+        }
+
+        .feature-card h3 {
+            font-family: var(--font-mono);
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 3rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+
+    <header>
+        <div class="logo">ID<span>IoT</span></div>
+        <div class="domain-badge">idiot.cn</div>
+    </header>
+
+    <section class="hero">
+        <h1>Identity-based <br><span class="highlight">Internet of Things</span></h1>
+        <div class="slogan">
+            "We are not <strong>idiots</strong>. We are <strong>ID-IoTs</strong>."<br>
+            <span style="font-size: 0.85rem; opacity: 0.7;">(我们不是白痴，我们是基于身份的物联网)</span>
+        </div>
+
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+            <div class="terminal-body">
+                <div><span class="comment"># Initialize ID-IoT device handshake</span></div>
+                <div><span class="prompt">$</span> id-iot connect --device "sensor_01"</div>
+                <div><span class="comment">> Resolving Decentralized Identifier (DID)...</span></div>
+                <div><span class="comment">> Generating Zero-Knowledge Proof...</span></div>
+                <div><span class="string">[SUCCESS] Identity verified in 12ms. Trust established.</span></div>
+                <div><span class="prompt">$</span> _</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="feature-card">
+            <h3>> Identity-First Architecture</h3>
+            <p>传统物联网依赖 IP 或 MAC 地址，极易被伪造。ID-IoT 采用密码学身份（DID / IBC）作为第一信任锚点，设备入网即认证。</p>
+        </div>
+        <div class="feature-card">
+            <h3>> Zero-Trust Security</h3>
+            <p>遵循零信任原则。不信任任何网络环境，每一次通信都需要基于设备身份的鉴权和加密，将“白痴”攻击拒之门外。</p>
+        </div>
+        <div class="feature-card">
+            <h3>> Lightweight & Scalable</h3>
+            <p>专为资源受限的 IoT 设备设计。轻量级身份证明协议，毫秒级握手，支持海量设备的生命周期管理（签发、轮换、吊销）。</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 ID-IoT Project. Open Source & Proudly Built by Non-Idiots.</p>
+        <p>Domain: idiot.cn | GitHub: @id-iot</p>
+    </footer>
+
+</body>
+</html>
